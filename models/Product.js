@@ -19,6 +19,6 @@ const productSchema = new mongoose.Schema(
 )
 
 productSchema.plugin(AutoIncrement, { inc_field: 'id' })
-productSchema.plugin(mongooseDelete, { overrideMethods: 'all' })
+productSchema.plugin(mongooseDelete, { overrideMethods: 'all' }) // only show data without deletedAt
 
 module.exports = mongoose.model('Product', productSchema)

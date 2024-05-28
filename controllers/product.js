@@ -2,6 +2,12 @@ const Product = require('../models/Product')
 const mongoose = require('mongoose')
 
 module.exports = {
+  getAllProducts: async (req, res) => {
+    try {
+      const products = await Product.find()
+      res.send(products)
+    } catch (error) {}
+  },
   addProduct: async (req, res) => {
     try {
       const { name, image, category, new_price, old_price } = req.body

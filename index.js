@@ -4,12 +4,11 @@ const app = express()
 const mongoose = require('mongoose')
 const AutoIncrement = require('mongoose-sequence')(mongoose)
 const jwt = require('jsonwebtoken')
-const multer = require('multer')
-const path = require('path')
 const cors = require('cors')
 const port = process.env.PORT || 4000
 
 const productRouter = require('./routes/product')
+const authRouter = require('./routes/auth')
 const imageUploadRouter = require('./upload/imageUpload')
 
 app.use(express.json())

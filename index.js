@@ -20,6 +20,7 @@ app.use('/api/product', productRouter)
 
 // route upload image
 app.use('/api/image', imageUploadRouter)
+app.use('/images', express.static('upload/images'))
 
 const link_mongoose = process.env.LINK_MONGOOSE
 // Database connect mongoDB

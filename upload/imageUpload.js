@@ -14,7 +14,7 @@ const upload = multer({ storage: storage })
 
 const router = express.Router()
 
-router.use('/images', express.static('upload/images'))
+router.use('/images', express.static(path.join(__dirname, '../upload/images')))
 
 router.post('/upload', upload.single('product'), (req, res) => {
   res.json({

@@ -1,9 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const product = require('../controllers/product')
+const auth = require('../controllers/auth')
 
-router.get('/getAllProducts', product.getAllProducts)
-router.post('/add', product.addProduct)
-router.delete('/:id/delete', product.removeProduct)
+router.post('/signup', auth.signup)
 
 module.exports = router

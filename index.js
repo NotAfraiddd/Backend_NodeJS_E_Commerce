@@ -2,8 +2,6 @@ require('dotenv').config()
 const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
-const AutoIncrement = require('mongoose-sequence')(mongoose)
-const jwt = require('jsonwebtoken')
 const cors = require('cors')
 const port = process.env.PORT || 4000
 
@@ -13,6 +11,9 @@ const imageUploadRouter = require('./upload/imageUpload')
 
 app.use(express.json())
 app.use(cors())
+
+// routes
+app.use('/api/auth', authRouter)
 
 // routes
 app.use('/api/product', productRouter)

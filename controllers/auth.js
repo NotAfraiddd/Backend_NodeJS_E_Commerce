@@ -18,7 +18,7 @@ module.exports = {
         name: req.body.username,
         email: req.body.email,
         password: req.body.password,
-        cart: {}
+        cart: cartData
       })
 
       await user.save()
@@ -37,6 +37,28 @@ module.exports = {
       res.status(500).json({ success: false, error: 'Internal Server Error' })
     }
   },
+  login: async (req, res) => {
+    try {
+      let user = await User.findOne({ email: req.body.email })
+      if (user) {
+        const isPassCompare = req.body.password === user.password
+        if (isPassCompare) {
+          const data = {
+            user: {
+              id: user.id
+            }
+          }
+          const accesstoken = jwt.sign(data, 'secret_ecom', { expiresIn: '30' })
+          const refreshToken = jwt.sign({ email: req.body.email }, 'refresh_secret_ecom', { expiresIn: '120' })
+          res.json({ success: true, accesstoken, refreshToken })
+        } else {
+          res.json({ success: false, error: 'Wrong password' })
+        }
+      } else {
+        res.json({ success: false, error: 'Wrong email' })
+      }
+    } catch (error) {}
+  },
   refreshToken: async (req, res) => {
     try {
       const { refreshToken } = req.body
@@ -49,7 +71,6 @@ module.exports = {
         return res.status(403).json({ success: false, error: 'Invalid refresh token' })
       }
 
-      // Xác thực refresh token
       jwt.verify(refreshToken, 'refresh_secret_ecom', (err, decoded) => {
         if (err) {
           return res.status(403).json({ success: false, error: 'Invalid refresh token' })

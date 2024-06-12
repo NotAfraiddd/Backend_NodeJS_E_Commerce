@@ -39,6 +39,29 @@ module.exports = {
       })
     }
   },
+  udpateProduct: async (req, res) => {
+    try {
+      const productId = req.params.id
+      const product = await Product.findOneAndUpdate({ id: productId }, { $set: req.body }, { new: true })
+      if (!product) {
+        return res.status(404).json({
+          success: false,
+          message: 'Product not found'
+        })
+      }
+      res.status(200).json({
+        success: true,
+        message: 'Product updated successfully',
+        product
+      })
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: 'Failed to update product',
+        error: error.message
+      })
+    }
+  },
   removeProduct: async (req, res) => {
     try {
       const productId = req.params.id

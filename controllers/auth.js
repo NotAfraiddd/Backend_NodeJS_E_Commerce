@@ -18,7 +18,8 @@ module.exports = {
         name: req.body.username,
         email: req.body.email,
         password: req.body.password,
-        cart: cartData
+        cart: cartData,
+        role: req.body.role
       })
 
       await user.save()
@@ -28,8 +29,8 @@ module.exports = {
           id: user.id
         }
       }
-      const accesstoken = jwt.sign(data, 'secret_ecom', { expiresIn: '300' })
-      const refreshToken = jwt.sign({ email: req.body.email }, 'refresh_secret_ecom', { expiresIn: '1h' })
+      const accesstoken = jwt.sign(data, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '300s' })
+      const refreshToken = jwt.sign({ email: req.body.email }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '1h' })
 
       res.json({ success: true, accesstoken, refreshToken })
     } catch (error) {
@@ -48,8 +49,10 @@ module.exports = {
               id: user.id
             }
           }
-          const accesstoken = jwt.sign(data, 'secret_ecom', { expiresIn: '30' })
-          const refreshToken = jwt.sign({ email: req.body.email }, 'refresh_secret_ecom', { expiresIn: '120' })
+          const accesstoken = jwt.sign(data, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '300s' })
+          const refreshToken = jwt.sign({ email: req.body.email }, process.env.REFRESH_TOKEN_SECRET, {
+            expiresIn: '1h'
+          })
           res.json({ success: true, accesstoken, refreshToken })
         } else {
           res.json({ success: false, error: 'Wrong password' })
@@ -71,12 +74,12 @@ module.exports = {
         return res.status(403).json({ success: false, error: 'Invalid refresh token' })
       }
 
-      jwt.verify(refreshToken, 'refresh_secret_ecom', (err, decoded) => {
+      jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, decoded) => {
         if (err) {
           return res.status(403).json({ success: false, error: 'Invalid refresh token' })
         }
 
-        const accessToken = jwt.sign({ user: { id: user.id } }, 'secret_ecom', { expiresIn: '15m' })
+        const accessToken = jwt.sign({ user: { id: user.id } }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' })
         res.json({ success: true, accessToken })
       })
     } catch (error) {

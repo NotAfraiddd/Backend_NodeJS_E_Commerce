@@ -7,7 +7,8 @@ const userSchema = new mongoose.Schema(
     email: { type: String, unique: true },
     password: { type: String },
     cart: { type: Object, require: true },
-    date: { type: Date, default: Date.now }
+    date: { type: Date, default: Date.now },
+    role: { type: String, default: 'user' }
   },
   {
     timestamps: true
